@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,15 @@ namespace forditoprog_beadano
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void LoadTable(object sender, RoutedEventArgs e)
+        {
+            var file = new OpenFileDialog();
+            file.ShowDialog();
+            labelOpenedTable.Content = "Megnyitott táblázat: " + file.FileName;
+            if (file.FileName != "")
+                StackAutomaton.Readtable(file.FileName);
         }
     }
 }
