@@ -43,7 +43,8 @@
                 Content="Ellenőrzés indítása" 
                 Grid.Row="1"
                 Grid.Column="3" 
-                Margin="10, 0, 10, 5"/>
+                Margin="10, 0, 10, 5"
+                Click="StartCheck"/>
 
         <Label x:Name="labelOpenedTable"
                Content="Megnyitott táblázat:"

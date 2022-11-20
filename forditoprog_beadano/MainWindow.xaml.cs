@@ -32,7 +32,17 @@ namespace forditoprog_beadano
             file.ShowDialog();
             labelOpenedTable.Content = "Megnyitott táblázat: " + file.FileName;
             if (file.FileName != "")
-                StackAutomaton.Readtable(file.FileName);
+                StackAutomaton.ReadTable(file.FileName, dataGridTable);
+        }
+
+        private void StartCheck(object sender, RoutedEventArgs e)
+        {
+            string col = txtBoxInput.Text.Split(',')[0];
+            string row = txtBoxInput.Text.Split(',')[1];
+
+            string content = StackAutomaton.GetCell(col, row);
+
+            MessageBox.Show(content);
         }
     }
 }
