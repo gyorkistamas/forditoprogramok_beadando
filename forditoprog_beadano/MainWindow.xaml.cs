@@ -24,6 +24,7 @@ namespace forditoprog_beadano
         public MainWindow()
         {
             InitializeComponent();
+            labelCorrect.Content = "";
         }
 
         private void LoadTable(object sender, RoutedEventArgs e)
@@ -37,12 +38,19 @@ namespace forditoprog_beadano
 
         private void StartCheck(object sender, RoutedEventArgs e)
         {
-            string col = txtBoxInput.Text.Split(',')[0];
-            string row = txtBoxInput.Text.Split(',')[1];
+            bool success = StackAutomaton.Start(txtBoxInput.Text);
 
-            string content = StackAutomaton.GetCell(col, row);
-
-            MessageBox.Show(content);
+            if (success)
+            {
+                labelTransformedText.Content = $"Az átalakított szöveg: {StackAutomaton.Input}";
+                labelCorrect.Foreground = Brushes.Green;
+                labelCorrect.Content = "A kifejezés helyes!";
+            }
+            else
+            {
+                labelCorrect.Foreground = Brushes.Red;
+                labelCorrect.Content = "A kifejezés helytelen!";
+            }
         }
     }
 }
