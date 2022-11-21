@@ -15,7 +15,7 @@ namespace forditoprog_beadano
 {
     public static class StackAutomaton
     {
-        public static DataTable Rules;
+        private static DataTable Rules;
         private static Stack<string> StackCheck;
         private static string State;
         
@@ -93,11 +93,11 @@ namespace forditoprog_beadano
             }
             catch (IndexOutOfRangeException)
             {
-                MessageBox.Show("A fájl formátuma nem megfelelő!");
+                MessageBox.Show("A fájl formátuma nem megfelelő!", "Hiba!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             catch (Exception e)
             {
-                MessageBox.Show($"Hiba a fájl beolvasása közben: {e.Message}");
+                MessageBox.Show($"Hiba a fájl beolvasása közben: {e.Message}", "Hiba!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally
             {
@@ -110,6 +110,13 @@ namespace forditoprog_beadano
 
         public static void WriteTable(string file)
         {
+
+            if (!IsTableRead)
+            {
+                MessageBox.Show("Nincsen betöltve táblázat!", "Hiba!", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             StreamWriter sw = new StreamWriter(file, false);
 
             for (int i = 0; i < Rules.Rows.Count; i++)
@@ -131,13 +138,13 @@ namespace forditoprog_beadano
         {
             if (input == "" || input is null)
             {
-                MessageBox.Show("Adja meg az elemezendő szöveget!");
+                MessageBox.Show("Adja meg az elemezendő szöveget!", "Hiba!", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
             if (!IsTableRead)
             {
-                MessageBox.Show("Töltsön be egy szimbólumtáblázatot!");
+                MessageBox.Show("Töltsön be egy szimbólumtáblázatot!", "Hiba!", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
@@ -164,9 +171,7 @@ namespace forditoprog_beadano
             Input = Regex.Replace(Input, @"[0-9]+", "i" );
 
             if (Input[Input.Length -1] != '#')
-            {
                 Input += "#";
-            }
         }
 
 
@@ -186,32 +191,31 @@ namespace forditoprog_beadano
 
                 string[] toPush = rule.Split(',');
 
-
-                if (rule == "accept")
+                switch (rule)
                 {
-                    State = "Accept";
-                    Transitions.Add("accept");
-                    return;
+                    case "accept":
+                        State = "Accept";
+                        Transitions.Add("accept");
+                        return;
+
+                    case "pop":
+                        input = input.Remove(0, 1);
+                        break;
+
+                    case "":
+                        State = "error";
+                        Transitions.Add("error");
+                        return;
+
+                    default:
+                        for (int i = toPush[0].Length - 1; i >= 0; i--)
+                        {
+                            StackCheck.Push(Convert.ToString(toPush[0][i]));
+                        }
+                        break;
                 }
 
-                else if (rule == "pop")
-                {
-                    input = input.Remove(0, 1);
-                }
-                else if (rule == "")
-                {
-                    State = "error";
-                    Transitions.Add("error");
-                    return;
-                }
-                else
-                { 
 
-                    for (int i = toPush[0].Length - 1; i >= 0; i--)
-                    {
-                        StackCheck.Push(Convert.ToString(toPush[0][i]));
-                    }
-                }
                 string[] prevMessage = Transitions.Last().Split(',');
 
                 prevMessage[0] = input;
