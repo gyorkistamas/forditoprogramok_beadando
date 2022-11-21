@@ -4,6 +4,7 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -127,18 +128,21 @@ namespace forditoprog_beadano
 
             StackCheck = new Stack<string>();
             StackCheck.Push("#");
-            StackCheck.Push((string)Rules.Rows[0][0]);
+            StackCheck.Push((string)Rules.Rows[1][0]);
             State = "Working";
             Transitions = new List<string>();
+            Analyze();
 
-
-            return true;
+            if (State == "Accept")
+                return true;
+            else
+                return false;
         }
 
 
         private static void TransformInput()
         {
-            Input = Regex.Replace(Input, "[0-9]+", "i" );
+            Input = Regex.Replace(Input, @"[0-9]+", "i" );
 
             if (Input[Input.Length -1] != '#')
             {
@@ -166,6 +170,7 @@ namespace forditoprog_beadano
                 {
                     State = "Accept";
                     Transitions.Add("accept");
+                    return;
                 }
 
                 else if (rule == "pop")
@@ -176,18 +181,31 @@ namespace forditoprog_beadano
                 {
                     State = "error";
                     Transitions.Add("error");
+                    return;
                 }
                 else
                 {
                     string[] toPush = rule.Split(',');
 
-                    for (int i = 0; i < toPush[0].Length;)
+                    for (int i = toPush[0].Length - 1; i >= 0; i--)
                     {
-                        if (i != toPush[0].Length -1 && toPush[0][i + 1] == '\'')
-                        {
-
-                        }
+                        StackCheck.Push(Convert.ToString(toPush[0][i]));
                     }
+
+                    string[] prevMessage = Transitions.Last().Split(',');
+
+                    //prevMessage[0] = input;
+
+                    //prevMessage[1] = prevMessage[1].Remove(0, 1);
+                    //prevMessage[1] = prevMessage[1].Insert(0, toPush[0]);
+
+                    //prevMessage[2] = prevMessage[2] + toPush[1];
+
+                    //string newMessage = prevMessage[0] + prevMessage[1] + prevMessage[3];
+
+                    //Transitions.Add(newMessage);
+
+
                 }
             }
 

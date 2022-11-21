@@ -40,9 +40,11 @@ namespace forditoprog_beadano
         {
             bool success = StackAutomaton.Start(txtBoxInput.Text);
 
+
+            labelTransformedText.Content = $"Az átalakított szöveg: {StackAutomaton.Input}";
+
             if (success)
             {
-                labelTransformedText.Content = $"Az átalakított szöveg: {StackAutomaton.Input}";
                 labelCorrect.Foreground = Brushes.Green;
                 labelCorrect.Content = "A kifejezés helyes!";
             }
