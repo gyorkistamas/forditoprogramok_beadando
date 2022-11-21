@@ -184,6 +184,8 @@ namespace forditoprog_beadano
 
                 string rule = GetCell(inputItem, stackItem);
 
+                string[] toPush = rule.Split(',');
+
 
                 if (rule == "accept")
                 {
@@ -203,27 +205,28 @@ namespace forditoprog_beadano
                     return;
                 }
                 else
-                {
-                    string[] toPush = rule.Split(',');
+                { 
 
                     for (int i = toPush[0].Length - 1; i >= 0; i--)
                     {
                         StackCheck.Push(Convert.ToString(toPush[0][i]));
                     }
-
-                    string[] prevMessage = Transitions.Last().Split(',');
-
-                    prevMessage[0] = input;
-
-                    prevMessage[1] = prevMessage[1].Remove(0, 1);
-                    prevMessage[1] = prevMessage[1].Insert(0, toPush[0]);
-
-                    prevMessage[2] = prevMessage[2] + toPush[1];
-
-                    string newMessage = prevMessage[0] + prevMessage[1] + prevMessage[2];
-
-                    Transitions.Add(newMessage);
                 }
+                string[] prevMessage = Transitions.Last().Split(',');
+
+                prevMessage[0] = input;
+
+                prevMessage[1] = prevMessage[1].Remove(0, 1);
+
+                if (toPush[0] != "pop")
+                {
+                    prevMessage[1] = prevMessage[1].Insert(0, toPush[0]);
+                    prevMessage[2] = prevMessage[2] + toPush[1];
+                }
+
+                string newMessage = prevMessage[0] + ',' + prevMessage[1] + ',' + prevMessage[2];
+
+                Transitions.Add(newMessage);
             }
 
         }

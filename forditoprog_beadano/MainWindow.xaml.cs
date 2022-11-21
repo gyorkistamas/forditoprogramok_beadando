@@ -56,9 +56,12 @@ namespace forditoprog_beadano
                 labelCorrect.Content = "A kifejezés helytelen!";
             }
 
-            foreach (var item in StackAutomaton.Transitions)
+            if (StackAutomaton.Transitions is not null)
             {
-                textboxAppliedRules.Text = textboxAppliedRules.Text + $"\n{item}";
+                foreach (var item in StackAutomaton.Transitions)
+                {
+                    textboxAppliedRules.Text = textboxAppliedRules.Text + $"\n{item}";
+                }
             }
         }
 
