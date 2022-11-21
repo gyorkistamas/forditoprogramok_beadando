@@ -21,6 +21,8 @@ namespace forditoprog_beadano
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        private OpenFileDialog file = new OpenFileDialog();
         public MainWindow()
         {
             InitializeComponent();
@@ -29,7 +31,6 @@ namespace forditoprog_beadano
 
         private void LoadTable(object sender, RoutedEventArgs e)
         {
-            var file = new OpenFileDialog();
             file.ShowDialog();
             labelOpenedTable.Content = "Megnyitott táblázat: " + file.FileName;
             if (file.FileName != "")
@@ -38,6 +39,7 @@ namespace forditoprog_beadano
 
         private void StartCheck(object sender, RoutedEventArgs e)
         {
+            textboxAppliedRules.Text = "";
             bool success = StackAutomaton.Start(txtBoxInput.Text);
 
 
@@ -53,6 +55,16 @@ namespace forditoprog_beadano
                 labelCorrect.Foreground = Brushes.Red;
                 labelCorrect.Content = "A kifejezés helytelen!";
             }
+
+            foreach (var item in StackAutomaton.Transitions)
+            {
+                textboxAppliedRules.Text = textboxAppliedRules.Text + $"\n{item}";
+            }
+        }
+
+        private void Savetable(object sender, RoutedEventArgs e)
+        {
+            StackAutomaton.WriteTable(file.FileName);
         }
     }
 }

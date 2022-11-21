@@ -63,7 +63,8 @@
                 Grid.Row="2"
                 Grid.Column="4" 
                 Content="Táblázat mentése"
-                Margin="10, 0, 10, 5"/>
+                Margin="10, 0, 10, 5"
+                Click="Savetable"/>
 
         <Label x:Name="labelTransformedText"
                Content="Az átalakított szöveg: " 
@@ -94,7 +95,9 @@
                  IsReadOnly="True"
                  Grid.Row="2"
                  Grid.Column="5"
-                 Grid.RowSpan="3" />
+                 Grid.RowSpan="3" 
+                 TextWrapping="Wrap"
+                 AcceptsReturn="True"/>
 
 
     </Grid>

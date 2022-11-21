@@ -108,6 +108,25 @@ namespace forditoprog_beadano
         }
 
 
+        public static void WriteTable(string file)
+        {
+            StreamWriter sw = new StreamWriter(file, false);
+
+            for (int i = 0; i < Rules.Rows.Count; i++)
+            {
+                string line = "";
+                for (int j = 0; j < Rules.Columns.Count; j++)
+                {
+                    line += $"{Rules.Rows[i][j]};";
+                }
+
+                sw.WriteLine(line);
+            }
+
+            sw.Close();
+        }
+
+
         public static bool Start(string input)
         {
             if (input == "" || input is null)
@@ -155,7 +174,7 @@ namespace forditoprog_beadano
         {
             string input = Input;
 
-            Transitions.Add($"({Input}, {StackCheck.Peek()}#, )");
+            Transitions.Add($"{Input},{StackCheck.Peek()}#,");
 
 
             while (State != "Deny" && State != "Error" && input.Length != 0)
@@ -194,18 +213,16 @@ namespace forditoprog_beadano
 
                     string[] prevMessage = Transitions.Last().Split(',');
 
-                    //prevMessage[0] = input;
+                    prevMessage[0] = input;
 
-                    //prevMessage[1] = prevMessage[1].Remove(0, 1);
-                    //prevMessage[1] = prevMessage[1].Insert(0, toPush[0]);
+                    prevMessage[1] = prevMessage[1].Remove(0, 1);
+                    prevMessage[1] = prevMessage[1].Insert(0, toPush[0]);
 
-                    //prevMessage[2] = prevMessage[2] + toPush[1];
+                    prevMessage[2] = prevMessage[2] + toPush[1];
 
-                    //string newMessage = prevMessage[0] + prevMessage[1] + prevMessage[3];
+                    string newMessage = prevMessage[0] + prevMessage[1] + prevMessage[2];
 
-                    //Transitions.Add(newMessage);
-
-
+                    Transitions.Add(newMessage);
                 }
             }
 
