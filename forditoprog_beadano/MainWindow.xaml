@@ -76,8 +76,13 @@
         <Label x:Name="labelCorrect"
                Content="Teszt"
                Grid.Row="3"
-               Grid.Column="3"
-               Grid.ColumnSpan="2"/>
+               Grid.Column="3" />
+
+        <CheckBox x:Name="checkRemoveNums"
+                  Content="Számok átalakítása"
+                  Grid.Row="3"
+                  Grid.Column="4"
+                  Margin="0, 5, 5, 0"/>
 
         <DataGrid x:Name="dataGridTable"
                   Grid.Row="4"
@@ -86,15 +91,15 @@
                   Margin="0, 10, 10, 0"
                   SelectionUnit="Cell"
                   CanUserSortColumns="False"
-                  CanUserAddRows="True"
+                  CanUserAddRows="False"
                   CanUserReorderColumns="False" />
 
 
-        <Button x:Name="buttonShowTree"
+        <!--<Button x:Name="buttonShowTree"
                 Content="Levezetési fa megjelenítése"
                 Grid.Row="1"
                 Grid.Column="5"
-                Margin="0, 0, 0, 10"/>
+                Margin="0, 0, 0, 10"/>-->
 
         <TextBox x:Name="textboxAppliedRules"
                  IsReadOnly="True"

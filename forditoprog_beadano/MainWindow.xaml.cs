@@ -39,8 +39,9 @@ namespace forditoprog_beadano
 
         private void StartCheck(object sender, RoutedEventArgs e)
         {
+            labelCorrect.Content = "";
             textboxAppliedRules.Text = "";
-            bool success = StackAutomaton.Start(txtBoxInput.Text);
+            bool success = StackAutomaton.Start(txtBoxInput.Text, checkRemoveNums);
 
 
             labelTransformedText.Content = $"Az átalakított szöveg: {StackAutomaton.Input}";
@@ -50,13 +51,16 @@ namespace forditoprog_beadano
                 labelCorrect.Foreground = Brushes.Green;
                 labelCorrect.Content = "A kifejezés helyes!";
             }
-            else
+            else if (StackAutomaton.State == "error")
             {
                 labelCorrect.Foreground = Brushes.Red;
-                labelCorrect.Content = "A kifejezés helytelen!";
+                if (txtBoxInput.Text != "" && StackAutomaton.Rules is not null)
+                {
+                    labelCorrect.Content = "A kifejezés helytelen!";
+                }
             }
 
-            if (StackAutomaton.Transitions is not null)
+            if (StackAutomaton.Transitions is not null && txtBoxInput.Text != "")
             {
                 foreach (var item in StackAutomaton.Transitions)
                 {

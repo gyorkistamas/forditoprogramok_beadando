@@ -15,9 +15,9 @@ namespace forditoprog_beadano
 {
     public static class StackAutomaton
     {
-        private static DataTable Rules;
+        public static DataTable Rules;
         private static Stack<string> StackCheck;
-        private static string State;
+        public static string State;
         
 
         public static string Input { get; private set; }
@@ -82,8 +82,13 @@ namespace forditoprog_beadano
 
                 while (!reader.EndOfStream)
                 {
-                    string[] line = reader.ReadLine().Split(';');
-                    Rules.Rows.Add(line);
+                    string line = reader.ReadLine();
+                    if (line == "")
+                        break;
+
+                    string[] cells = line.Split(';');
+                    
+                    Rules.Rows.Add(cells);
                 }
 
                 IsTableRead = true;
@@ -91,9 +96,9 @@ namespace forditoprog_beadano
 
 
             }
-            catch (IndexOutOfRangeException)
+            catch (IndexOutOfRangeException e)
             {
-                MessageBox.Show("A fájl formátuma nem megfelelő!", "Hiba!", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"A fájl formátuma nem megfelelő:\n{e.Message}", "Hiba!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             catch (Exception e)
             {
@@ -127,6 +132,8 @@ namespace forditoprog_beadano
                     line += $"{Rules.Rows[i][j]};";
                 }
 
+                line = line.TrimEnd(';');
+
                 sw.WriteLine(line);
             }
 
@@ -134,7 +141,7 @@ namespace forditoprog_beadano
         }
 
 
-        public static bool Start(string input)
+        public static bool Start(string input, CheckBox transformNum)
         {
             if (input == "" || input is null)
             {
@@ -149,7 +156,7 @@ namespace forditoprog_beadano
             }
 
             Input = input;
-            TransformInput();
+            TransformInput(transformNum.IsChecked);
 
 
             StackCheck = new Stack<string>();
@@ -159,16 +166,16 @@ namespace forditoprog_beadano
             Transitions = new List<string>();
             Analyze();
 
-            if (State == "Accept")
-                return true;
-            else
-                return false;
+            return State == "Accept";
         }
 
 
-        private static void TransformInput()
+        private static void TransformInput(bool? transformNums)
         {
-            Input = Regex.Replace(Input, @"[0-9]+", "i" );
+            if ((bool)transformNums)
+            {
+                Input = Regex.Replace(Input, @"[0-9]+", "i");
+            }
 
             if (Input[Input.Length -1] != '#')
                 Input += "#";
@@ -210,7 +217,21 @@ namespace forditoprog_beadano
                     default:
                         for (int i = toPush[0].Length - 1; i >= 0; i--)
                         {
-                            StackCheck.Push(Convert.ToString(toPush[0][i]));
+                            if (toPush[0][i] != 'ε')
+                            {
+                                if (toPush[0][i] == '\'')
+                                {
+                                    string ruleToPush = Convert.ToString(toPush[0][i - 1]) + Convert.ToString(toPush[0][i]);
+                                    StackCheck.Push(ruleToPush);
+                                    i--;
+                                }
+                                else
+                                {
+                                    StackCheck.Push(Convert.ToString(toPush[0][i]));
+                                }
+                            }
+
+                            
                         }
                         break;
                 }
