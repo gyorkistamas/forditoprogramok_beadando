@@ -13,7 +13,7 @@ using System.Windows.Controls;
 
 namespace forditoprog_beadano
 {
-    public static class StackAutomaton
+    public static class Automaton
     {
         public static DataTable Rules;
         private static Stack<string> StackCheck;
@@ -26,7 +26,7 @@ namespace forditoprog_beadano
 
         public static List<string> Transitions { get; private set; }
 
-        static StackAutomaton()
+        static Automaton()
         {
             IsTableRead = false;
         }
@@ -255,5 +255,12 @@ namespace forditoprog_beadano
             }
 
         }
+
+
+        private static void ProcessRule(string rule)
+        {
+
+        }
+
     }
 }

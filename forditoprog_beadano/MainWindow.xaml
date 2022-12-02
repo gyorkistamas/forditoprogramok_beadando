@@ -51,7 +51,8 @@
                Content="Megnyitott táblázat:"
                Grid.Row="2"
                Grid.Column="1" 
-               Grid.ColumnSpan="2" />
+               Grid.ColumnSpan="2" 
+               />
 
         <Button x:Name="buttonLoadTable"
                 Grid.Row="2"

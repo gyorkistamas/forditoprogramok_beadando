@@ -34,35 +34,35 @@ namespace forditoprog_beadano
             file.ShowDialog();
             labelOpenedTable.Content = "Megnyitott táblázat: " + file.FileName;
             if (file.FileName != "")
-                StackAutomaton.ReadTable(file.FileName, dataGridTable);
+                Automaton.ReadTable(file.FileName, dataGridTable);
         }
 
         private void StartCheck(object sender, RoutedEventArgs e)
         {
             labelCorrect.Content = "";
             textboxAppliedRules.Text = "";
-            bool success = StackAutomaton.Start(txtBoxInput.Text, checkRemoveNums);
+            bool success = Automaton.Start(txtBoxInput.Text, checkRemoveNums);
 
 
-            labelTransformedText.Content = $"Az átalakított szöveg: {StackAutomaton.Input}";
+            labelTransformedText.Content = $"Az átalakított szöveg: {Automaton.Input}";
 
             if (success)
             {
                 labelCorrect.Foreground = Brushes.Green;
                 labelCorrect.Content = "A kifejezés helyes!";
             }
-            else if (StackAutomaton.State == "error")
+            else if (Automaton.State == "error")
             {
                 labelCorrect.Foreground = Brushes.Red;
-                if (txtBoxInput.Text != "" && StackAutomaton.Rules is not null)
+                if (txtBoxInput.Text != "" && Automaton.Rules is not null)
                 {
                     labelCorrect.Content = "A kifejezés helytelen!";
                 }
             }
 
-            if (StackAutomaton.Transitions is not null && txtBoxInput.Text != "")
+            if (Automaton.Transitions is not null && txtBoxInput.Text != "")
             {
-                foreach (var item in StackAutomaton.Transitions)
+                foreach (var item in Automaton.Transitions)
                 {
                     textboxAppliedRules.Text = textboxAppliedRules.Text + $"\n{item}";
                 }
@@ -71,7 +71,7 @@ namespace forditoprog_beadano
 
         private void Savetable(object sender, RoutedEventArgs e)
         {
-            StackAutomaton.WriteTable(file.FileName);
+            Automaton.WriteTable(file.FileName);
         }
     }
 }
