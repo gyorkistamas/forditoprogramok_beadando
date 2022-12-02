@@ -188,15 +188,12 @@ namespace forditoprog_beadano
 
             Transitions.Add($"{Input},{StackCheck.Peek()}#,");
 
-
             while (State != "Deny" && State != "Error" && input.Length != 0)
             {
                 string stackItem = StackCheck.Pop();
                 string inputItem = Convert.ToString(input[0]);
 
                 string rule = GetCell(inputItem, stackItem);
-
-                string[] toPush = rule.Split(',');
 
                 switch (rule)
                 {
@@ -215,51 +212,59 @@ namespace forditoprog_beadano
                         return;
 
                     default:
-                        for (int i = toPush[0].Length - 1; i >= 0; i--)
-                        {
-                            if (toPush[0][i] != 'ε')
-                            {
-                                if (toPush[0][i] == '\'')
-                                {
-                                    string ruleToPush = Convert.ToString(toPush[0][i - 1]) + Convert.ToString(toPush[0][i]);
-                                    StackCheck.Push(ruleToPush);
-                                    i--;
-                                }
-                                else
-                                {
-                                    StackCheck.Push(Convert.ToString(toPush[0][i]));
-                                }
-                            }
-
-                            
-                        }
+                        ProcessRule(rule, input);
                         break;
-                }
-
-
-                string[] prevMessage = Transitions.Last().Split(',');
-
-                prevMessage[0] = input;
-
-                prevMessage[1] = prevMessage[1].Remove(0, 1);
-
-                if (toPush[0] != "pop")
-                {
-                    prevMessage[1] = prevMessage[1].Insert(0, toPush[0]);
-                    prevMessage[2] = prevMessage[2] + toPush[1];
-                }
-
-                string newMessage = prevMessage[0] + ',' + prevMessage[1] + ',' + prevMessage[2];
-
-                Transitions.Add(newMessage);
+                } 
             }
 
         }
 
 
-        private static void ProcessRule(string rule)
+        private static void ProcessRule(string rule, string input)
         {
+            string[] toPush = rule.Split(',');
 
+            if (toPush.Length != 2)
+            {
+                MessageBox.Show($"A szabály formátuma nem megfelelő: {rule}", "Hiba!", MessageBoxButton.OK, MessageBoxImage.Error);
+                State = "Error";
+                Transitions.Add("error");
+                return;
+            }
+
+
+            for (int i = toPush[0].Length - 1; i >= 0; i--)
+            {
+                if (toPush[0][i] != 'ε')
+                {
+                    if (toPush[0][i] == '\'')
+                    {
+                        string ruleToPush = Convert.ToString(toPush[0][i - 1]) + Convert.ToString(toPush[0][i]);
+                        StackCheck.Push(ruleToPush);
+                        i--;
+                    }
+                    else
+                    {
+                        StackCheck.Push(Convert.ToString(toPush[0][i]));
+                    }
+                }
+            }
+
+            string[] prevMessage = Transitions.Last().Split(',');
+
+            prevMessage[0] = input;
+
+            prevMessage[1] = prevMessage[1].Remove(0, 1);
+
+            if (toPush[0] != "pop")
+            {
+                prevMessage[1] = prevMessage[1].Insert(0, toPush[0]);
+                prevMessage[2] = prevMessage[2] + toPush[1];
+            }
+
+            string newMessage = prevMessage[0] + ',' + prevMessage[1] + ',' + prevMessage[2];
+
+            Transitions.Add(newMessage);
         }
 
     }
