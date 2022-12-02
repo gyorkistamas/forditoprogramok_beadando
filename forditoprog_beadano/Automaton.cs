@@ -19,7 +19,6 @@ namespace forditoprog_beadano
         private static Stack<string> StackCheck;
         public static string State;
         
-
         public static string Input { get; private set; }
 
         public static bool IsTableRead { get; private set; }
@@ -61,8 +60,6 @@ namespace forditoprog_beadano
 
             return (string)Rules.Rows[rownum][colnum];
         }
-
-
         public static void ReadTable(string file, DataGrid grid)
         {
             IsTableRead = false;
@@ -165,6 +162,8 @@ namespace forditoprog_beadano
             State = "Working";
             Transitions = new List<string>();
             Analyze();
+
+            
 
             return State == "Accept";
         }
