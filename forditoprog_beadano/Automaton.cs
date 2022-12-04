@@ -203,6 +203,7 @@ namespace forditoprog_beadano
 
                     case "pop":
                         input = input.Remove(0, 1);
+                        UpdateTransitions(input);
                         break;
 
                     case "":
@@ -254,12 +255,30 @@ namespace forditoprog_beadano
             prevMessage[0] = input;
 
             prevMessage[1] = prevMessage[1].Remove(0, 1);
+            if (prevMessage[1][0] == '\'')
+            {
+                prevMessage[1] = prevMessage[1].Remove(0, 1);
+            }
 
-            if (toPush[0] != "pop")
+            if (toPush[0][0] != 'ε')
             {
                 prevMessage[1] = prevMessage[1].Insert(0, toPush[0]);
-                prevMessage[2] = prevMessage[2] + toPush[1];
             }
+            prevMessage[2] = prevMessage[2] + toPush[1];
+
+            string newMessage = prevMessage[0] + ',' + prevMessage[1] + ',' + prevMessage[2];
+
+            Transitions.Add(newMessage);
+        }
+
+
+        private static void UpdateTransitions(string input)
+        {
+            string[] prevMessage = Transitions.Last().Split(',');
+
+            prevMessage[0] = input;
+
+            prevMessage[1] = prevMessage[1].Remove(0, 1);
 
             string newMessage = prevMessage[0] + ',' + prevMessage[1] + ',' + prevMessage[2];
 
