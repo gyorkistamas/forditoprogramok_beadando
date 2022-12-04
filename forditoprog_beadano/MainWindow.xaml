@@ -108,7 +108,8 @@
                  Grid.Column="5"
                  Grid.RowSpan="3" 
                  TextWrapping="Wrap"
-                 AcceptsReturn="True"/>
+                 AcceptsReturn="True"
+                 VerticalScrollBarVisibility="Auto"/>
 
 
     </Grid>
