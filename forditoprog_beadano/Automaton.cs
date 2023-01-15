@@ -15,14 +15,34 @@ namespace forditoprog_beadano
 {
     public static class Automaton
     {
+        /// <summary>
+        /// A nyelvtan szabályait tartalmazó táblázat
+        /// </summary>
         public static DataTable Rules;
+
+        /// <summary>
+        /// Az automata verme
+        /// </summary>
         private static Stack<string> StackCheck;
+
+        /// <summary>
+        /// Az automata állapota a számítás végén (Elfogad, Hiba ...)
+        /// </summary>
         public static string State;
         
+        /// <summary>
+        /// A bemeneti szöveg
+        /// </summary>
         public static string Input { get; private set; }
 
+        /// <summary>
+        /// Logikai változó, annak tárolására, hogy lett-e táblázat beolvasva
+        /// </summary>
         public static bool IsTableRead { get; private set; }
 
+        /// <summary>
+        /// Lista, amiben az automata egyes lépései vannak tárolva (input szalagon maradt szöveg, verem tartalma, alkalmazott szabályok sorszáma
+        /// </summary>
         public static List<string> Transitions { get; private set; }
 
         static Automaton()
@@ -30,7 +50,12 @@ namespace forditoprog_beadano
             IsTableRead = false;
         }
 
-
+        /// <summary>
+        /// Szabály kikeresése a táblázatból
+        /// </summary>
+        /// <param name="col">Input szalagról olvasott karakter</param>
+        /// <param name="line">Veremből olvasott szabály</param>
+        /// <returns>A megtalált szabály, vagy üres string, ha nem sikerült megtalálni</returns>
         public static string GetCell(string col, string line)
         {
             int colnum = -1;
@@ -60,6 +85,12 @@ namespace forditoprog_beadano
 
             return (string)Rules.Rows[rownum][colnum];
         }
+
+        /// <summary>
+        /// Táblázat beolvasása csv fájlból
+        /// </summary>
+        /// <param name="file">A fájl elérési útja</param>
+        /// <param name="grid">A táblázat refernciája, amibe kerül a beolvasott adat</param>
         public static void ReadTable(string file, DataGrid grid)
         {
             IsTableRead = false;
@@ -109,7 +140,10 @@ namespace forditoprog_beadano
 
         }
 
-
+        /// <summary>
+        /// Táblázat mentése vissza fájlba
+        /// </summary>
+        /// <param name="file">A fájl elérési útja, ahove mentése kerül.</param>
         public static void WriteTable(string file)
         {
 
@@ -138,6 +172,12 @@ namespace forditoprog_beadano
         }
 
 
+        /// <summary>
+        /// A vizsgálat elindítása
+        /// </summary>
+        /// <param name="input">A bemeneti szöveg</param>
+        /// <param name="transformNum">Az ablakban megjelenő gomb referenciája</param>
+        /// <returns>Igaz vagy hamis érték, annak függvényében, hogy elfogadta-e a szót, vagy sem</returns>
         public static bool Start(string input, CheckBox transformNum)
         {
             if (input == "" || input is null)
@@ -163,12 +203,13 @@ namespace forditoprog_beadano
             Transitions = new List<string>();
             Analyze();
 
-            
-
             return State == "Accept";
         }
 
-
+        /// <summary>
+        /// Szöveg átalakítása (Ha nincs a végén #, akkor odarakjuk, illetve ha kell, akkor a számokat kicseréljük "i"-re)
+        /// </summary>
+        /// <param name="transformNums"></param>
         private static void TransformInput(bool? transformNums)
         {
             if ((bool)transformNums)
@@ -180,7 +221,9 @@ namespace forditoprog_beadano
                 Input += "#";
         }
 
-
+        /// <summary>
+        /// Az elemzést végző metódus
+        /// </summary>
         private static void Analyze()
         {
             string input = Input;
@@ -219,12 +262,16 @@ namespace forditoprog_beadano
 
         }
 
-
+        /// <summary>
+        /// Szabály feldolgozása, ellenőrzése
+        /// </summary>
+        /// <param name="rule">A feldolgozandó sazbály</param>
+        /// <param name="input">A bemenit szöveg, ahol jelenleg járunk a feldolgozásban</param>
         private static void ProcessRule(string rule, string input)
         {
             string[] toPush = rule.Split(',');
 
-            if (toPush.Length != 2)
+            if (toPush.Length != 2 || toPush[0] == "")
             {
                 MessageBox.Show($"A szabály formátuma nem megfelelő: {rule}", "Hiba!", MessageBoxButton.OK, MessageBoxImage.Error);
                 State = "Error";
@@ -271,7 +318,10 @@ namespace forditoprog_beadano
             Transitions.Add(newMessage);
         }
 
-
+        /// <summary>
+        /// Az átmenetek lista frissítése
+        /// </summary>
+        /// <param name="input">Az eddig feldolgozott bementi szöveg</param>
         private static void UpdateTransitions(string input)
         {
             string[] prevMessage = Transitions.Last().Split(',');
